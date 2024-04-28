@@ -1,14 +1,14 @@
 
 const inquirer = require('inquirer')
 const fs = require('fs')
-const shapes = require('./shapes.js');
+const Shapes = require('./lib/shapes.js');
 const shapeChoices = ["circle", "triangle", "square"];
 
 class CLI {
     run() {
         return inquirer
             //lists question to ask user
-            .createPromptModule([
+            .prompt([
                 {
                     //prompts users and asks for 3 characters to add to svg that is being created
                     type: "input",
@@ -30,18 +30,20 @@ class CLI {
                 },
                 {
                     //select a list of shapes from shapechoices
-                    type: list,
+                    type: "list",
                     message: "Select a shape you'd like to use",
                     name: "shape",
                     choices: shapeChoices
-                },
+                }
             ])
             .then((answers) => {
-                shapes.createSVG(answers.shape, answers.color, answers.message.slice(0, 3));
+                const Shapes = new Shapes(answers.shape, answers.color, answers.characters.slice(0, 3));
+                Shapes.createSVG();;
+             })
+                .catch((err) => {
+                    console.log(err);
+                 })              
             }
-            );
-        module.exports
-
-
-    }
-}
+        }
+ 
+module.exports = CLI
