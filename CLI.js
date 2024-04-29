@@ -1,7 +1,8 @@
 
 const inquirer = require('inquirer')
-const fs = require('fs')
 const Shapes = require('./lib/shapes.js');
+
+
 const shapeChoices = ["circle", "triangle", "square"];
 
 class CLI {
@@ -23,9 +24,15 @@ class CLI {
                     }
                 },
                 {
-                    //asks for a color to be used
+                    //asks for a color to be used for text
                     type: "input",
-                    message: "Enter a color keyword:",
+                    message: "Enter a color keyword for your text color:",
+                    name: "textColor"
+                },
+                {
+                    //asks for a color to be used for shape
+                    type: "input",
+                    message: "Enter a color keyword for your shape:",
                     name: "color"
                 },
                 {
@@ -36,13 +43,18 @@ class CLI {
                     choices: shapeChoices
                 }
             ])
-            .then((answers) => {
-                const Shapes = new Shapes(answers.shape, answers.color, answers.characters.slice(0, 3));
-                Shapes.createSVG();;
+            .then(answers => {
+
+                const message = answers.message ? answers.message.slice(0, 3) : '';
+                const shapes = new Shapes(answers.shape, answers.color, message, answers.textColor);
+                return shapes.createSVG();
              })
-                .catch((err) => {
-                    console.log(err);
-                 })              
+             .then(() => {
+                console.log("SVG file created successfully.");
+             })
+                .catch(err => {
+                    console.log("Error", err);
+                 });        
             }
         }
  
